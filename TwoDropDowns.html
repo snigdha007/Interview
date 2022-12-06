@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+ <head>
+  <title>Drop Downs</title>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script>
+
+ 
+/***************************************
+1. Client calls and asks you how to create the drop down for the models
+2. When the make is changed the model drop down should reflect just the models for the currently selected make 
+3. Alert the user somehow, possibly display on the screen, their selection. 
+****************************************/
+//set up our list of Car make and associated models
+ 	var oCars = {	
+				 "ASTON_MARTIN" : ["DB9 COUPE" , "DB9 COUPE MANUAL", "DB9 VOLANTE", "V12 VANQUISH S", "V8 VANTAGE"],
+				 "AUDI" : ["A3", "A4 AVANT", "QUATTRO", "A4 CABRIOLET" , "A4 CABRIOLET", "QUATTRO", "A4 QUATTRO" , "A6", "A6 AVANT", "QUATTRO A6","QUATTRO A8 L", "GTI", "PASSAT",  "S4", "S4 AVANT", "S4 CABRIOLET", "TT COUPE", "TT ROADSTER" ],
+				 "BMW" : ["325CI CONVERTIBLE", "325I", "325XI", "325XI SPORT WAGON", "330CI CONVERTIBLE", "330I", "330XI", "525I", "M3", "M3 CONVERTIBLE", "MINI COOPER", "X5", "X5", "4.8IS", "Z4 M ROADSTER"],
+				 "FERRARI": ["F430", "FERRARI 612 SCAGLIETTI", "FERRARI F141"],
+				 "LAMBORGHINI" : ["L-140/715 GALLARDO", "L-147/148 MURCIELAGO"],
+				 "MASERATI" : ["COUPE CAMBIOCORSA/GT/G-SPORT", "MASERATI QUATTROPORTE"]
+				 
+              };
+/*************
+BuildMakeDrop()
+Loops though Cars and builds the list of makers
+**************/			  
+
+ function BuildMakeDrop()
+ {
+	var oMake = document.getElementById("make");
+
+	//We rebuild each time so save the currently selected element
+	var nSelectedMakeIndex = oMake.selectedIndex;   
+	
+	//first time in is -1
+	if(nSelectedMakeIndex < 0)
+	{
+		nSelectedMakeIndex = 0;
+	}
+	
+	//reset
+	var nMakeIndex = 0;
+	oMake.options.length = 0;
+	
+	//rebuild
+	 for (var model in oCars)
+	{ 	
+	var test= oCars[model];// this captures the car's object model
+		oMake.options[oMake.options.length] = new Option(model, nMakeIndex);
+		
+	
+		
+		nMakeIndex++;
+	} 
+	
+	//selected
+	oMake.selectedIndex = nSelectedMakeIndex;
+	var sCurrentSelectedMake = oMake.options[oMake.selectedIndex].text;
+	
+	
+
+	
+}
+// this is the function that changes the section from the 1st selection
+function Selection_model(){
+
+
+var oMake = document.getElementById("model");
+
+	//We rebuild each time so save the currently selected element
+	var nSelectedMakeIndex = oMake.selectedIndex;   
+
+	//first time in is -1
+	if(nSelectedMakeIndex < 0)
+	{
+		nSelectedMakeIndex = 0;
+	}
+	
+	//reset
+	var nMakeIndex = 0;
+	oMake.options.length = 0;
+	
+	//rebuild
+	// selection from the 1st model
+	var selected_item= document.getElementById('make').value;
+	
+	// Getting the value from the selected option
+	var $text=$("#make :selected").text();
+
+// going through each of the car model
+	for (var model in oCars)
+	{ 	
+	//if car model matches the selected item then the loop will excute. 
+     if ( model== $text){
+	// this captures the car's object model
+	        var test= oCars[model];
+			//keys is the car's name
+			var keys = Object.keys(oCars);
+			// car_keys are the model.
+            var car_keys= keys[selected_item];
+			test=oCars[car_keys];
+			//going through each car_keys value
+			for( var i=0; i< test.length; i++){
+			//then build the dropdown.
+		 var option=$('<option></option>').text(test[i]);
+		  var values = option.val();
+		 $('select').append(values);
+		 $("#model :selected").text(); // The text content of the selected option
+
+					oMake.options[oMake.options.length] = new Option(values, nMakeIndex);
+					
+					
+					}
+					
+		nMakeIndex++;
+
+		
+	}
+
+  
+	}//for
+	
+	
+}
+
+	
+</script>
+
+
+ <body  onload="BuildMakeDrop();">
+<h2> Select a car</h2>
+ 	<form name="myform" id="myform" action="">	
+	<select id="make" onChange="Selection_model();">
+	</select>
+	<select id="model">
+	</select>	
+	</form>
+	<div>
+		<span id="selectedCar"></span>
+	</div>
+ </body>
+</html>
